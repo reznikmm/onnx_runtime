@@ -1,0 +1,30 @@
+--  SPDX-FileCopyrightText: 2023 Max Reznik <reznikmm@gmail.com>
+--
+--  SPDX-License-Identifier: MIT
+----------------------------------------------------------------
+
+with "onnx_runtime_config.gpr";
+project Onnx_Runtime is
+
+   for Library_Name use "Onnx_Runtime";
+   for Library_Version use Project'Library_Name & ".so." & Onnx_Runtime_Config.Crate_Version;
+
+   for Source_Dirs use ("../source");
+   for Object_Dir use "../.obj/" & Onnx_Runtime_Config.Build_Profile;
+   for Create_Missing_Dirs use "True";
+   for Library_Dir use "../.lib";
+
+   type Library_Type_Type is ("relocatable", "static", "static-pic");
+   Library_Type : Library_Type_Type :=
+     external ("ONNX_RUNTIME_LIBRARY_TYPE", external ("LIBRARY_TYPE", "static"));
+   for Library_Kind use Library_Type;
+
+   package Compiler is
+      for Default_Switches ("Ada") use Onnx_Runtime_Config.Ada_Compiler_Switches;
+   end Compiler;
+
+   package Binder is
+      for Switches ("Ada") use ("-Es"); --  Symbolic traceback
+   end Binder;
+
+end Onnx_Runtime;

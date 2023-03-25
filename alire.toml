@@ -1,0 +1,19 @@
+name = "onnx_runtime"
+description = "Ada binding to ONNX runtime"
+version = "0.1.0-dev"
+
+authors = ["Max Reznik"]
+maintainers = ["Max Reznik <reznikmm@gmail.com>"]
+maintainers-logins = ["reznikmm"]
+project-files = ["gnat/onnx_runtime.gpr"]
+
+[configuration]
+output_dir = "gnat"
+generate_ada = false
+generate_c = false
+
+[build-switches]
+development.optimization = ["-O0"]
+development.style_checks = ["-gnaty"]
+development.contracts = "Yes"
+
