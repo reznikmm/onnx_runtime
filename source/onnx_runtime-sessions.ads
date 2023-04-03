@@ -7,6 +7,7 @@ private with Ada.Finalization;
 
 with ONNX_Runtime.Session_Options;
 with ONNX_Runtime.C_API;
+with ONNX_Runtime.Values;
 
 package ONNX_Runtime.Sessions is
 
@@ -19,6 +20,11 @@ package ONNX_Runtime.Sessions is
       Model   : String;
       Options : ONNX_Runtime.Session_Options.Session_Options) return Session;
    --  Create an OrtSession from a model file.
+
+   procedure Run
+     (Self   : in out Session'Class;
+      Input  : ONNX_Runtime.Values.Value_Array;
+      Output : out ONNX_Runtime.Values.Value_Array);
 
 private
 

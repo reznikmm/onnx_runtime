@@ -25,8 +25,10 @@ package ONNX_Runtime.Environments is
    function Create_Session
      (Self    : Environment'Class;
       Model   : String;
-      Options : ONNX_Runtime.Session_Options.Session_Options)
-        return ONNX_Runtime.Sessions.Session;
+      Options : ONNX_Runtime.Session_Options.Session_Options :=
+        ONNX_Runtime.Session_Options.Default_Options)
+          return ONNX_Runtime.Sessions.Session;
+   --  Create an OrtSession from a model file.
 
 private
 
@@ -39,8 +41,10 @@ private
    function Create_Session
      (Self    : Environment'Class;
       Model   : String;
-      Options : ONNX_Runtime.Session_Options.Session_Options)
-        return ONNX_Runtime.Sessions.Session is
-          (ONNX_Runtime.Sessions.Internal_Create (Self.Value, Model, Options));
+      Options : ONNX_Runtime.Session_Options.Session_Options :=
+        ONNX_Runtime.Session_Options.Default_Options)
+          return ONNX_Runtime.Sessions.Session is
+            (ONNX_Runtime.Sessions.Internal_Create
+               (Self.Value, Model, Options));
 
 end ONNX_Runtime.Environments;

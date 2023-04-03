@@ -971,7 +971,7 @@ package ONNX_Runtime.C_API is
                arg3 : Interfaces.C.Strings.chars_ptr;
                arg4 : access Interfaces.C.size_t) return OrtStatusPtr;  -- onnxruntime_c_api.h:3877
       end record
-      with Import => True,
+      with --  Import => True,
            Convention => CPP;
 
 

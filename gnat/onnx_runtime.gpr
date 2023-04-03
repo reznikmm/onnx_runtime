@@ -23,6 +23,10 @@ project Onnx_Runtime is
       for Default_Switches ("Ada") use Onnx_Runtime_Config.Ada_Compiler_Switches;
    end Compiler;
 
+   package Linker is
+      for Linker_Options use ("-lonnxruntime");
+   end Linker;
+
    package Binder is
       for Switches ("Ada") use ("-Es"); --  Symbolic traceback
    end Binder;

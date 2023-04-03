@@ -3,8 +3,6 @@
 --  SPDX-License-Identifier: MIT
 ----------------------------------------------------------------
 
-with ONNX_Runtime.C_API;
-
 package body ONNX_Runtime.Session_Options is
 
    ---------------------

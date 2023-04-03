@@ -15,9 +15,10 @@ package body ONNX_Runtime.Environments is
      (Logging : Logging_Level := Warning; Log_Id : String := "")
       return Environment
    is
-      Name   : Interfaces.C.Strings.chars_ptr :=
+      Name  : Interfaces.C.Strings.chars_ptr :=
         Interfaces.C.Strings.New_String (Log_Id);
-      Level  : constant ONNX_Runtime.C_API.OrtLoggingLevel :=
+
+      Level : constant ONNX_Runtime.C_API.OrtLoggingLevel :=
         ONNX_Runtime.C_API.OrtLoggingLevel'Val (Logging_Level'Pos (Logging));
    begin
       return Result : Environment do
