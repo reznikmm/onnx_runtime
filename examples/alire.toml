@@ -1,0 +1,13 @@
+name = "examples"
+description = "ONNX Runtime examples"
+version = "0.1.0-dev"
+
+authors = ["Max Reznik"]
+maintainers = ["Max Reznik <reznikmm@gmail.com>"]
+maintainers-logins = ["reznikmm"]
+
+executables = ["mnist"]
+[[depends-on]]
+onnx_runtime = "*"
+[[pins]]
+onnx_runtime = { path='..' }
