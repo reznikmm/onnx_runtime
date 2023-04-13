@@ -11,15 +11,46 @@ with System;
 
 package body ONNX_Runtime.Values is
 
+   use type Interfaces.C.size_t;
+
+   function Internal_Create_Tensor
+     (Buffer    : System.Address;
+      Size      : Interfaces.C.size_t;
+      Tipe      : ONNX_Runtime.C_API.ONNXTensorElementDataType;
+      Shape     : Element_Index_Array) return Value;
+
    -------------------
    -- Create_Tensor --
    -------------------
 
    function Create_Tensor
      (Flat_Data : Float_Array;
+      Shape     : Element_Index_Array) return Value is
+       (Internal_Create_Tensor
+         (Flat_Data'Address,
+          Flat_Data'Size / 8,
+          ONNX_Runtime.C_API.ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT,
+          Shape));
+
+   function Create_Tensor
+     (Flat_Data : Int64_Array;
+      Shape     : Element_Index_Array) return Value is
+       (Internal_Create_Tensor
+         (Flat_Data'Address,
+          Flat_Data'Size / 8,
+          ONNX_Runtime.C_API.ONNX_TENSOR_ELEMENT_DATA_TYPE_INT64,
+          Shape));
+
+   ----------------------------
+   -- Internal_Create_Tensor --
+   ----------------------------
+
+   function Internal_Create_Tensor
+     (Buffer    : System.Address;
+      Size      : Interfaces.C.size_t;
+      Tipe      : ONNX_Runtime.C_API.ONNXTensorElementDataType;
       Shape     : Element_Index_Array) return Value
    is
-      use type Interfaces.C.size_t;
       Memory_Info : access ONNX_Runtime.C_API.OrtMemoryInfo;
       C_Shape     : array (Shape'Range) of aliased Interfaces.Integer_64 :=
         [for X of Shape => Interfaces.Integer_64 (X)];
@@ -34,13 +65,13 @@ package body ONNX_Runtime.Values is
          Check_Status
            (API.CreateTensorWithDataAsOrtValue
               (Memory_Info,
-               Flat_Data'Address, Flat_Data'Size / 8,
+               Buffer, Size,
                C_Shape (Shape'First)'Unchecked_Access, Shape'Length,
-               ONNX_Runtime.C_API.ONNX_TENSOR_ELEMENT_DATA_TYPE_FLOAT,
+               Tipe,
                Result.Value'Address));
          API.ReleaseMemoryInfo (Memory_Info);
       end return;
-   end Create_Tensor;
+   end Internal_Create_Tensor;
 
    --------------
    -- Finalize --
@@ -74,6 +105,21 @@ package body ONNX_Runtime.Values is
          Data := Buffer;
       end;
    end Get_Data;
+
+   ------------
+   -- Length --
+   ------------
+
+   function Length (Self : Value'Class) return Element_Index is
+      Shape  : access ONNX_Runtime.C_API.OrtTensorTypeAndShapeInfo;
+      Result : aliased Interfaces.C.size_t;
+   begin
+      Check_Status (API.GetTensorTypeAndShape (Self.Value, Shape'Address));
+      Check_Status (API.GetTensorShapeElementCount (Shape, Result'Access));
+      API.ReleaseTensorTypeAndShapeInfo (Shape);
+
+      return Element_Index (Result);
+   end Length;
 
    ------------------
    -- Set_Internal --
