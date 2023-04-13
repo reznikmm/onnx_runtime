@@ -6,7 +6,7 @@ authors = ["Max Reznik"]
 maintainers = ["Max Reznik <reznikmm@gmail.com>"]
 maintainers-logins = ["reznikmm"]
 
-executables = ["mnist"]
+executables = ["mnist", "ljspeech"]
 [[depends-on]]
 onnx_runtime = "*"
 [[pins]]

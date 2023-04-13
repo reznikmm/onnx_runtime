@@ -6,11 +6,11 @@
 with "config/examples_config.gpr";
 project Examples is
 
-   for Source_Dirs use ("MNIST/", "config/");
+   for Source_Dirs use ("MNIST", "ljspeech", "config");
    for Object_Dir use "obj/" & Examples_Config.Build_Profile;
    for Create_Missing_Dirs use "True";
    for Exec_Dir use "bin";
-   for Main use ("mnist.adb");
+   for Main use ("mnist.adb", "ljspeech.adb");
 
    package Compiler is
       for Default_Switches ("Ada") use Examples_Config.Ada_Compiler_Switches;
