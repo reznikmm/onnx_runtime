@@ -11,3 +11,6 @@ executables = ["mnist", "ljspeech"]
 onnx_runtime = "*"
 [[pins]]
 onnx_runtime = { path='..' }
+
+[[depends-on]]
+sdlada = "^2.5.20"
