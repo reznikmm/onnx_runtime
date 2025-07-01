@@ -22,3 +22,19 @@
       `test.wav`. The text is embedded into the source code
       as a token sequence. It was created by
       https://github.com/neuml/ttstokenizer.
+
+3. SDL/MNIST - an interactive MNIST example using SDL for user input.
+   The operator can draw on the model input surface using the mouse:
+
+   - **Left click**: Draw model input point
+   - **Right click**: Clear model input
+
+   ![SDL/MNIST screenshot](mnist_sdl.png)
+
+   1. Download the model from https://github.com/microsoft/onnxruntime-inference-examples/tree/main/c_cxx/MNIST
+
+          curl -LO https://github.com/microsoft/onnxruntime-inference-examples/raw/main/c_cxx/MNIST/mnist.onnx
+
+   2. Build examples with `alr -C examples/SDL build`
+   3. Run `./examples/SDL/bin/mnist_sdl`. Use the mouse to draw a digit.
+

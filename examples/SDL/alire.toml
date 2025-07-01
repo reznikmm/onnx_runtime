@@ -1,13 +1,16 @@
 name = "examples"
-description = "ONNX Runtime examples"
+description = "ONNX Runtime + SDL examples"
 version = "0.1.0-dev"
 
 authors = ["Max Reznik"]
 maintainers = ["Max Reznik <reznikmm@gmail.com>"]
 maintainers-logins = ["reznikmm"]
 
-executables = ["mnist", "ljspeech"]
+executables = ["mnist_sdl"]
 [[depends-on]]
 onnx_runtime = "*"
 [[pins]]
-onnx_runtime = { path='..' }
+onnx_runtime = { path='../..' }
+
+[[depends-on]]
+sdlada = "^2.5.20"
