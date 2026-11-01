@@ -7,6 +7,10 @@ maintainers = ["Max Reznik <reznikmm@gmail.com>"]
 maintainers-logins = ["reznikmm"]
 
 executables = ["mnist", "ljspeech"]
+
+[build-profiles]
+"*" = "development"
+
 [[depends-on]]
 onnx_runtime = "*"
 [[pins]]

@@ -35,9 +35,10 @@ package body ONNX_Runtime is
          declare
             Error : constant Interfaces.C.Strings.chars_ptr :=
               API.GetErrorMessage (Value);
+            Text  : constant String := Interfaces.C.Strings.Value (Error);
          begin
             API.ReleaseStatus (Value);
-            raise Program_Error with Interfaces.C.Strings.Value (Error);
+            raise Program_Error with Text;
          end;
       end if;
    end Check_Status;

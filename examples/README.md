@@ -38,3 +38,40 @@
    2. Build examples with `alr -C examples/SDL build`
    3. Run `./examples/SDL/bin/mnist_sdl`. Use the mouse to draw a digit.
 
+4. StyleTTS2 Ukraininan TTS
+
+   1. Fetch `model.onnx` and `style.pt` from
+      [huggingface](https://huggingface.co/patriotyk/styletts2_ukrainian_single)
+   2. Fix `model.onnx` with Python script:
+      ```python
+      """Replace negative axes in Transpose 'perm' attributes with their positive value.
+
+      A negative axis -k in a permutation of length n means n-k, so -1 becomes n-1.
+      ONNX Runtime rejects negative values in 'perm' for some exported graphs.
+      Usage: python fix_transpose.py IN.onnx OUT.onnx
+      """
+      import sys
+      import onnx
+
+      src, dst = sys.argv[1], sys.argv[2]
+      model = onnx.load(src)
+      fixed = []
+      for node in model.graph.node:
+          if node.op_type != "Transpose":
+              continue
+          for attr in node.attribute:
+              if attr.name == "perm" and any(v < 0 for v in attr.ints):
+                  rank = len(attr.ints)
+                  before = list(attr.ints)
+                  attr.ints[:] = [v + rank if v < 0 else v for v in before]
+                  fixed.append((node.name, before, list(attr.ints)))
+      onnx.save(model, dst)
+      for name, before, after in fixed:
+          print(f"fixed {name}: {before} -> {after}")
+      print(f"{len(fixed)} node(s) fixed; wrote {dst}")
+      ```
+   3. Extract `STYLE.bin` from `style.pt`
+      ```shell
+      unzip -j style.pt filatov/data/0 && mv 0 STYLE.bin
+      ```
+   4. Run `bin/styletts2 MODEL.onnx STYLE.bin OUTPUT.wav`

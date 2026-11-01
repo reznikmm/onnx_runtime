@@ -1,11 +1,8 @@
---  SPDX-FileCopyrightText: 2023 Max Reznik <reznikmm@gmail.com>
+--  SPDX-FileCopyrightText: 2023-2026 Max Reznik <reznikmm@gmail.com>
 --
 --  SPDX-License-Identifier: MIT
-----------------------------------------------------------------
+---------------------------------------------------------------------
 
-pragma Extensions_Allowed (on);
-
-with Interfaces;
 with Interfaces.C;
 with System;
 
@@ -52,9 +49,14 @@ package body ONNX_Runtime.Values is
       Shape     : Element_Index_Array) return Value
    is
       Memory_Info : access ONNX_Runtime.C_API.OrtMemoryInfo;
-      C_Shape     : array (Shape'Range) of aliased Interfaces.Integer_64 :=
-        [for X of Shape => Interfaces.Integer_64 (X)];
+      --  Size at least 1 so that a rank-0 (scalar) shape can still be
+      --  passed with a valid pointer; rank is given by Shape'Length.
+      C_Shape     : aliased array (1 .. Natural'Max (1, Shape'Length))
+        of aliased Interfaces.Integer_64 := (others => 0);
    begin
+      for I in Shape'Range loop
+         C_Shape (I - Shape'First + 1) := Interfaces.Integer_64 (Shape (I));
+      end loop;
       Check_Status
         (API.CreateCpuMemoryInfo
            (ONNX_Runtime.C_API.OrtAllocatorType_OrtArenaAllocator,
@@ -66,7 +68,7 @@ package body ONNX_Runtime.Values is
            (API.CreateTensorWithDataAsOrtValue
               (Memory_Info,
                Buffer, Size,
-               C_Shape (Shape'First)'Unchecked_Access, Shape'Length,
+               C_Shape (1)'Unchecked_Access, Shape'Length,
                Tipe,
                Result.Value'Address));
          API.ReleaseMemoryInfo (Memory_Info);
